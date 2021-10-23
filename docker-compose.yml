@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+
+    configserver:
+        image pukala93/bank_configserver:latest
+        mem_limit: 700m
+        ports:
+            - "8071:8071"
+        network:
+            - bank-network
+
+    accounts:
+        image: pukala93/bank_accounts:latest
+        mem_limit: 700m
+        ports:
+            - "8080:8080"
+        networks:
+            - bank-network
+          
+    loans:
+        image: pukala93/bank_loans:latest
+        mem_limit: 700m
+        ports:
+            - "8090:8090"
+        networks:
+            - bank-network
+            
+    cards:
+        image: pukala93/bank_cards:latest
+        mem_limit: 700m
+        ports:
+            - "9000:9000"
+        networks:
+            - bank-network
+            
+networks:
+    bank-network:
