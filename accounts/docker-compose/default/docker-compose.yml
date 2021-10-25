@@ -8,28 +8,28 @@ services:
     ports:
       - "9411:9411"
     networks:
-     - pukala93_bank
-  
+     - pukala93
+
   configserver:
     image: pukala93/bank_configserver:latest
     mem_limit: 700m
     ports:
       - "8071:8071"
     networks:
-     - pukala93_bank
+     - pukala93
     depends_on:
       - zipkin
     environment:
       SPRING_PROFILES_ACTIVE: default
       SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
-     
+      
   eurekaserver:
     image: pukala93/bank_eurekaserver:latest
     mem_limit: 700m
     ports:
       - "8070:8070"
     networks:
-     - pukala93_bank
+     - pukala93
     depends_on:
       - configserver
     deploy:
@@ -42,21 +42,21 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
-      
+
   accounts:
     image: pukala93/bank_accounts:latest
     mem_limit: 700m
     ports:
       - "8080:8080"
     networks:
-      - pukala93_bank
+      - pukala93
     depends_on:
       - configserver
       - eurekaserver
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 15s
+        delay: 30s
         max_attempts: 3
         window: 120s
     environment:
@@ -71,14 +71,14 @@ services:
     ports:
       - "8090:8090"
     networks:
-      - pukala93_bank
+      - pukala93
     depends_on:
       - configserver
       - eurekaserver
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 15s
+        delay: 30s
         max_attempts: 3
         window: 120s
     environment:
@@ -93,14 +93,14 @@ services:
     ports:
       - "9000:9000"
     networks:
-      - pukala93_bank
+      - pukala93
     depends_on:
       - configserver
       - eurekaserver
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 15s
+        delay: 30s
         max_attempts: 3
         window: 120s
     environment:
@@ -115,7 +115,7 @@ services:
     ports:
       - "8072:8072"
     networks:
-      - pukala93_bank
+      - pukala93
     depends_on:
       - configserver
       - eurekaserver
@@ -133,6 +133,6 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
       SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
-   
+
 networks:
-  pukala93_bank:
+  pukala93:
