@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,8 @@ import java.util.List;
 
 @RestController
 public class AccountsController {
+
+    private final static Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
     @Autowired
     private AccountRepository accountRepository;
@@ -33,7 +37,11 @@ public class AccountsController {
 
     @PostMapping("/myAccount")
     public Accounts getAccountDetails(@RequestBody Customer customer) {
-        return accountRepository.findByCustomerId(customer.getCustomerId());
+
+        logger.debug("myAccount method started");
+        Accounts accounts = accountRepository.findByCustomerId(customer.getCustomerId());
+        logger.debug("myAccount method ended");
+        return accounts;
     }
 
     @GetMapping("/account/properties")
@@ -50,6 +58,7 @@ public class AccountsController {
     public CustomerDetails myCustomerDetails(@RequestHeader("bank-correlation-id") String correlationId,
                                              @RequestBody Customer customer) {
 
+        logger.debug("myCustomerDetails method started");
         Accounts accounts = accountRepository.findByCustomerId(customer.getCustomerId());
         List<Loans> loans = loansFeignClient.getLoansDetails(correlationId, customer);
         List<Cards> cards = cardsFeignClient.getCardDetails(correlationId, customer);
@@ -58,6 +67,8 @@ public class AccountsController {
         customerDetails.setAccounts(accounts);
         customerDetails.setLoans(loans);
         customerDetails.setCards(cards);
+        logger.debug("myCustomerDetails method ended");
+
         return customerDetails;
 
     }

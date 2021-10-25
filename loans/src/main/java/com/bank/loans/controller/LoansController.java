@@ -8,6 +8,8 @@ import com.bank.loans.repository.LoansRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,8 @@ import java.util.List;
 
 @RestController
 public class LoansController {
+
+    private final static Logger logger = LoggerFactory.getLogger(LoansController.class);
 
     @Autowired
     private LoansRepository loansRepository;
@@ -25,8 +29,10 @@ public class LoansController {
     @PostMapping("/myLoans")
     public List<Loans> getLoansDetails(@RequestHeader("bank-correlation-id") String correlationId,
                                        @RequestBody Customer customer) {
-        System.out.println("Invoking Loans Microservice");
-        return loansRepository.findByCustomerIdOrderByStartDataDesc(customer.getCustomerId());
+        logger.debug("myLoans method started");
+        List<Loans> loans = loansRepository.findByCustomerIdOrderByStartDataDesc(customer.getCustomerId());
+        logger.debug("myLoans method ended");
+        return loans;
     }
 
     @GetMapping("/loans/properties")
