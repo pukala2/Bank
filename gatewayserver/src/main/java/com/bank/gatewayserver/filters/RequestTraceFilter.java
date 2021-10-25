@@ -15,9 +15,9 @@ import java.util.UUID;
 
 @Order(1)
 @Component
-public class TraceFilter implements GlobalFilter {
+public class RequestTraceFilter implements GlobalFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(TraceFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestTraceFilter.class);
 
     @Autowired
     FilterUtility filterUtility;
