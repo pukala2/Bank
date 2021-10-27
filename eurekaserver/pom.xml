@@ -80,7 +80,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<image>
-						<name>bank/${project.artifactId}</name>
+						<name>pukala93/bank_${project.artifactId}</name>
 					</image>
 				</configuration>
 			</plugin>
